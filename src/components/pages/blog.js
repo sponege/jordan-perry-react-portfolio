@@ -79,6 +79,26 @@ class Blog extends Component {
         blogItems: [blog].concat(this.state.blogItems),
       });
     };
+
+    this.handleDeleteClick = (blog) => {
+      axios
+        .delete(
+          `https://api.devcamp.space/portfolio/portfolio_blogs/${blog.id}`,
+          { withCredentials: true }
+        )
+        .then((response) => {
+          this.setState({
+            blogItems: this.state.blogItems.filter((blogItem) => {
+              return blogItem.id != blog.id;
+            }),
+          });
+
+          return response.data;
+        })
+        .catch((error) => {
+          console.log("delete blog error", error);
+        });
+    };
   }
 
   componentWillMount() {
@@ -91,7 +111,18 @@ class Blog extends Component {
 
   render() {
     const blogRecords = this.state.blogItems.map((item) => {
-      return <BlogItem key={item.id} blogItem={item} />;
+      if (this.props.loggedInStatus == "LOGGED_IN") {
+        return (
+          <div key={item.id} className="admin-blog-wrapper">
+            <BlogItem blogItem={item} />
+            <a onClick={() => this.handleDeleteClick(item)}>
+              <FontAwesomeIcon icon="trash" />
+            </a>
+          </div>
+        );
+      } else {
+        return <BlogItem key={item.id} blogItem={item} />;
+      }
     });
 
     return (

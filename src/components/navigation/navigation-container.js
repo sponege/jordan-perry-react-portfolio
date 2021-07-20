@@ -68,7 +68,11 @@ const NavigationComponent = (props) => {
           <a onClick={handleSignOut}>
             <FontAwesomeIcon icon="sign-out-alt" />
           </a>
-        ) : null}
+        ) : (
+          <NavLink to="/auth">
+            <FontAwesomeIcon icon="sign-in-alt" />
+          </NavLink>
+        )}
       </div>
 
       {false ? <button>Add Blog</button> : null}
